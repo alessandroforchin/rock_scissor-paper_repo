@@ -1,64 +1,74 @@
-let textArray= [
-    'rock',
-    'paper',
-    'scissors',
-];
+const header = document.querySelector("header");
+const score = document.querySelector('.score');
+
+let playerScore = 0;
+let computerScore = 0;
+let currentResult = "";
 
 function computerPlay() {
+    let textArray= ['rock', 'paper', 'scissors'];
     return textArray[Math.floor(Math.random() * textArray.length)]; 
-    // console.log(randomIndex);
 }
 
-function playRound(lowerPlayerSelection, computerSelection) {
-    if (lowerPlayerSelection === 'rock' && computerSelection === 'scissors' ||
-    lowerPlayerSelection === 'paper' && computerSelection === 'rock' ||
-    lowerPlayerSelection === 'scissors' && computerSelection === 'paper') {
-        return 'You Win!';
-    } else if (lowerPlayerSelection === computerSelection) {
-        return 'None';
+function playRound(playerSelection, computerSelection) {
+    if (playerSelection === 'rock' && computerSelection === 'scissors' ||
+    playerSelection === 'paper' && computerSelection === 'rock' ||
+    playerSelection === 'scissors' && computerSelection === 'paper') {
+        playerScore ++;
+        playerScoreDisplay.textContent = `Player: ${playerScore}`;
+        scoreInfo.textContent = 'Congratulations, You Win this round!'
+    } else if (playerSelection === computerSelection) {
+        playerScore === playerScore && computerScore === computerScore;
+        scoreInfo.textContent = 'It\'s a tie'
     } else {
-        return 'Sorry, You lose!';
+        computerScore ++;
+        computerScoreDisplay.textContent = `Computer: ${computerScore}`;
+        scoreInfo.textContent = 'Sorry, You lose. Try Again'
     }
 }
 
-// console.log(playRound(playerSelection, computerSelection));
+document.querySelectorAll('button').forEach((item) => {
+    item.addEventListener('click', (e) => {
+        playerSelection = e.target.id;
+        computerSelection = computerPlay();
+        playRound(playerSelection, computerSelection);
+        gameWinner();
+    })
+})
 
-function game() {
-    let playerPoints = 0;
-    let computerPoints = 0;
-    let tie = 0;
+const div = document.createElement("div");
+div.classList.add("score");
+header.appendChild(div);
 
-    for (let i = 1; i <= 5; i++) {
-        let playerSelection = prompt('What\'s your move?');
-        let computerSelection = computerPlay();
-        let lowerPlayerSelection = playerSelection.toLowerCase();
+const playerScoreDisplay = document.createElement("h2");
+div.appendChild(playerScoreDisplay);
+playerScoreDisplay.textContent = `Player score: ${playerScore}`;
+playerScoreDisplay.classList.add("playerScoreDisplay");
 
-        console.log(`Round ${i}`);
-        console.log(`Player: ${lowerPlayerSelection}, Computer: ${computerSelection}`);
+const computerScoreDisplay = document.createElement("h2");
+div.appendChild(computerScoreDisplay);
+computerScoreDisplay.textContent = `Computer score: ${computerScore}`;
+computerScoreDisplay.classList.add("computerScoreDisplay");
 
-        let play = playRound(lowerPlayerSelection, computerSelection);
+let scoreInfo = document.createElement("h3");
+score.appendChild(scoreInfo);
+scoreInfo.textContent = currentResult;
 
-        if (play === 'You Win!') {
-            playerPoints += 1;
-        } else if (play === 'Sorry, You lose!') {
-            computerPoints += 1;
-        } else {
-            tie += 1;
-        }
-    }
+let winner = document.createElement('h2');
 
-    console.log(`You won ${playerPoints} times.`);
-    console.log(`Computer won ${computerPoints} times.`);
-    console.log(`Ties: ${tie}`);
-
-    if (playerPoints > computerPoints) {
-        console.log('Congrats! You win the game.');
-    } else if (playerPoints === computerPoints) {
-        console.log('It\'s a tie');
-    } else {
-        console.log('Oh sorry! The computer wins the game.');
+function gameWinner() {
+    if (playerScore === 5) {
+        div.appendChild(winner);
+        winner.textContent = 'Congrats, You win the game!';
+        div.removeChild(playerScoreDisplay);
+        div.removeChild(computerScoreDisplay);
+        score.removeChild(scoreInfo);
+    } else if (computerScore === 5) {
+        div.appendChild(winner);
+        winner.textContent = 'Sorry, Computer wins the game';
+        div.removeChild(playerScoreDisplay);
+        div.removeChild(computerScoreDisplay);
+        score.removeChild(scoreInfo);
     }
 }
-
-console.log(game());
 
